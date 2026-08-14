@@ -68,8 +68,14 @@ function ActivatePage() {
             className="space-y-4"
             onSubmit={(e) => {
               e.preventDefault();
-              if (!user) return toast.error("سجّل الدخول أولًا");
-              if (code.trim().length < 6) return toast.error("أدخل كود ترخيص صحيح");
+              if (!user) {
+                toast.error("سجّل الدخول أولًا");
+                return;
+              }
+              if (code.trim().length < 6) {
+                toast.error("أدخل كود ترخيص صحيح");
+                return;
+              }
               mutation.mutate(code.trim().toUpperCase());
             }}
           >

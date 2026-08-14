@@ -38,11 +38,17 @@ function AuthPage() {
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
     const parsed = z.object({ email: emailSchema, password: passwordSchema }).safeParse({ email, password });
-    if (!parsed.success) return toast.error(parsed.error.issues[0]!.message);
+    if (!parsed.success) {
+      toast.error(parsed.error.issues[0]!.message);
+      return;
+    }
     setLoading(true);
     const { error } = await supabase.auth.signInWithPassword({ email: parsed.data.email, password });
     setLoading(false);
-    if (error) return toast.error("بيانات الدخول غير صحيحة");
+    if (error) {
+      toast.error("بيانات الدخول غير صحيحة");
+      return;
+    }
     toast.success("تم تسجيل الدخول بنجاح");
     navigate({ to: "/dashboard" });
   }
@@ -57,7 +63,10 @@ function AuthPage() {
         centerName: z.string().trim().max(120),
       })
       .safeParse({ email, password, fullName, centerName });
-    if (!parsed.success) return toast.error(parsed.error.issues[0]!.message);
+    if (!parsed.success) {
+      toast.error(parsed.error.issues[0]!.message);
+      return;
+    }
     setLoading(true);
     const { data, error } = await supabase.auth.signUp({
       email: parsed.data.email,
@@ -68,7 +77,10 @@ function AuthPage() {
       },
     });
     setLoading(false);
-    if (error) return toast.error(error.message.includes("already") ? "هذا البريد مسجل بالفعل" : "تعذر إنشاء الحساب");
+    if (error) {
+      toast.error(error.message.includes("already") ? "هذا البريد مسجل بالفعل" : "تعذر إنشاء الحساب");
+      return;
+    }
     if (data.session) {
       toast.success("تم إنشاء الحساب");
       navigate({ to: "/dashboard" });
@@ -82,7 +94,8 @@ function AuthPage() {
     const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: window.location.origin });
     if (result.error) {
       setLoading(false);
-      return toast.error("تعذر تسجيل الدخول عبر جوجل");
+      toast.error("تعذر تسجيل الدخول عبر جوجل");
+      return;
     }
     if (result.redirected) return;
     navigate({ to: "/dashboard" });
