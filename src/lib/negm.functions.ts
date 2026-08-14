@@ -141,7 +141,7 @@ export const createBackup = createServerFn({ method: "POST" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {
     const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
-    const tables = ["students", "groups", "schedules", "attendance", "payments", "exams", "homework"];
+    const tables = ["students", "groups", "schedules", "attendance", "payments", "exams", "homework"] as const;
     const snapshot: Record<string, unknown> = {};
     for (const table of tables) {
       const { data } = await supabaseAdmin.from(table).select("*").eq("teacher_id", context.userId);
@@ -150,7 +150,7 @@ export const createBackup = createServerFn({ method: "POST" })
     const size = Math.round(JSON.stringify(snapshot).length / 1024);
     const { data: backup, error } = await supabaseAdmin
       .from("backups")
-      .insert({ teacher_id: context.userId, data: snapshot, size_kb: size })
+      .insert({ teacher_id: context.userId, data: JSON.parse(JSON.stringify(snapshot)), size_kb: size })
       .select("id, created_at, size_kb")
       .single();
     if (error) throw new Error(error.message);
