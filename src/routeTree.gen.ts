@@ -16,10 +16,14 @@ import { Route as AuthRouteImport } from './routes/auth'
 import { Route as TrialEndedRouteImport } from './routes/trial-ended'
 import { Route as AuthenticatedAttendanceRouteImport } from './routes/_authenticated/attendance'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
+import { Route as AuthenticatedExamsRouteImport } from './routes/_authenticated/exams'
 import { Route as AuthenticatedGroupsRouteImport } from './routes/_authenticated/groups'
+import { Route as AuthenticatedHomeworkRouteImport } from './routes/_authenticated/homework'
+import { Route as AuthenticatedPaymentsRouteImport } from './routes/_authenticated/payments'
 import { Route as AuthenticatedStudentsRouteImport } from './routes/_authenticated/students'
 import { Route as StudentIndexRouteImport } from './routes/student.index'
 import { Route as StudentRegisterRouteImport } from './routes/student.register'
+import { Route as AuthenticatedStudentsIdRouteImport } from './routes/_authenticated/students.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -55,9 +59,24 @@ const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedExamsRoute = AuthenticatedExamsRouteImport.update({
+  id: '/exams',
+  path: '/exams',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedGroupsRoute = AuthenticatedGroupsRouteImport.update({
   id: '/groups',
   path: '/groups',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedHomeworkRoute = AuthenticatedHomeworkRouteImport.update({
+  id: '/homework',
+  path: '/homework',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedPaymentsRoute = AuthenticatedPaymentsRouteImport.update({
+  id: '/payments',
+  path: '/payments',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedStudentsRoute = AuthenticatedStudentsRouteImport.update({
@@ -75,6 +94,11 @@ const StudentRegisterRoute = StudentRegisterRouteImport.update({
   path: '/student/register',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedStudentsIdRoute = AuthenticatedStudentsIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AuthenticatedStudentsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -83,10 +107,14 @@ export interface FileRoutesByFullPath {
   '/trial-ended': typeof TrialEndedRoute
   '/attendance': typeof AuthenticatedAttendanceRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/exams': typeof AuthenticatedExamsRoute
   '/groups': typeof AuthenticatedGroupsRoute
-  '/students': typeof AuthenticatedStudentsRoute
+  '/homework': typeof AuthenticatedHomeworkRoute
+  '/payments': typeof AuthenticatedPaymentsRoute
+  '/students': typeof AuthenticatedStudentsRouteWithChildren
   '/student/register': typeof StudentRegisterRoute
   '/student/': typeof StudentIndexRoute
+  '/students/$id': typeof AuthenticatedStudentsIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -95,10 +123,14 @@ export interface FileRoutesByTo {
   '/trial-ended': typeof TrialEndedRoute
   '/attendance': typeof AuthenticatedAttendanceRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
+  '/exams': typeof AuthenticatedExamsRoute
   '/groups': typeof AuthenticatedGroupsRoute
-  '/students': typeof AuthenticatedStudentsRoute
+  '/homework': typeof AuthenticatedHomeworkRoute
+  '/payments': typeof AuthenticatedPaymentsRoute
+  '/students': typeof AuthenticatedStudentsRouteWithChildren
   '/student/register': typeof StudentRegisterRoute
   '/student': typeof StudentIndexRoute
+  '/students/$id': typeof AuthenticatedStudentsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -109,10 +141,14 @@ export interface FileRoutesById {
   '/trial-ended': typeof TrialEndedRoute
   '/_authenticated/attendance': typeof AuthenticatedAttendanceRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
+  '/_authenticated/exams': typeof AuthenticatedExamsRoute
   '/_authenticated/groups': typeof AuthenticatedGroupsRoute
-  '/_authenticated/students': typeof AuthenticatedStudentsRoute
+  '/_authenticated/homework': typeof AuthenticatedHomeworkRoute
+  '/_authenticated/payments': typeof AuthenticatedPaymentsRoute
+  '/_authenticated/students': typeof AuthenticatedStudentsRouteWithChildren
   '/student/register': typeof StudentRegisterRoute
   '/student/': typeof StudentIndexRoute
+  '/_authenticated/students/$id': typeof AuthenticatedStudentsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -123,10 +159,14 @@ export interface FileRouteTypes {
     | '/trial-ended'
     | '/attendance'
     | '/dashboard'
+    | '/exams'
     | '/groups'
+    | '/homework'
+    | '/payments'
     | '/students'
     | '/student/register'
     | '/student/'
+    | '/students/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -135,10 +175,14 @@ export interface FileRouteTypes {
     | '/trial-ended'
     | '/attendance'
     | '/dashboard'
+    | '/exams'
     | '/groups'
+    | '/homework'
+    | '/payments'
     | '/students'
     | '/student/register'
     | '/student'
+    | '/students/$id'
   id:
     | '__root__'
     | '/'
@@ -148,10 +192,14 @@ export interface FileRouteTypes {
     | '/trial-ended'
     | '/_authenticated/attendance'
     | '/_authenticated/dashboard'
+    | '/_authenticated/exams'
     | '/_authenticated/groups'
+    | '/_authenticated/homework'
+    | '/_authenticated/payments'
     | '/_authenticated/students'
     | '/student/register'
     | '/student/'
+    | '/_authenticated/students/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -215,11 +263,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedDashboardRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/exams': {
+      id: '/_authenticated/exams'
+      path: '/exams'
+      fullPath: '/exams'
+      preLoaderRoute: typeof AuthenticatedExamsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/groups': {
       id: '/_authenticated/groups'
       path: '/groups'
       fullPath: '/groups'
       preLoaderRoute: typeof AuthenticatedGroupsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/homework': {
+      id: '/_authenticated/homework'
+      path: '/homework'
+      fullPath: '/homework'
+      preLoaderRoute: typeof AuthenticatedHomeworkRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/payments': {
+      id: '/_authenticated/payments'
+      path: '/payments'
+      fullPath: '/payments'
+      preLoaderRoute: typeof AuthenticatedPaymentsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/students': {
@@ -243,21 +312,47 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudentRegisterRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/students/$id': {
+      id: '/_authenticated/students/$id'
+      path: '/$id'
+      fullPath: '/students/$id'
+      preLoaderRoute: typeof AuthenticatedStudentsIdRouteImport
+      parentRoute: typeof AuthenticatedStudentsRoute
+    }
   }
 }
+
+interface AuthenticatedStudentsRouteChildren {
+  AuthenticatedStudentsIdRoute: typeof AuthenticatedStudentsIdRoute
+}
+
+const AuthenticatedStudentsRouteChildren: AuthenticatedStudentsRouteChildren = {
+  AuthenticatedStudentsIdRoute: AuthenticatedStudentsIdRoute,
+}
+
+const AuthenticatedStudentsRouteWithChildren =
+  AuthenticatedStudentsRoute._addFileChildren(
+    AuthenticatedStudentsRouteChildren,
+  )
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedAttendanceRoute: typeof AuthenticatedAttendanceRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
+  AuthenticatedExamsRoute: typeof AuthenticatedExamsRoute
   AuthenticatedGroupsRoute: typeof AuthenticatedGroupsRoute
-  AuthenticatedStudentsRoute: typeof AuthenticatedStudentsRoute
+  AuthenticatedHomeworkRoute: typeof AuthenticatedHomeworkRoute
+  AuthenticatedPaymentsRoute: typeof AuthenticatedPaymentsRoute
+  AuthenticatedStudentsRoute: typeof AuthenticatedStudentsRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedAttendanceRoute: AuthenticatedAttendanceRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
+  AuthenticatedExamsRoute: AuthenticatedExamsRoute,
   AuthenticatedGroupsRoute: AuthenticatedGroupsRoute,
-  AuthenticatedStudentsRoute: AuthenticatedStudentsRoute,
+  AuthenticatedHomeworkRoute: AuthenticatedHomeworkRoute,
+  AuthenticatedPaymentsRoute: AuthenticatedPaymentsRoute,
+  AuthenticatedStudentsRoute: AuthenticatedStudentsRouteWithChildren,
 }
 
 const AuthenticatedRouteRouteWithChildren =
