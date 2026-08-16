@@ -19,7 +19,10 @@ export const startTrial = createServerFn({ method: "POST" })
     const state = await loadAccessState(context.userId);
     if (state.licenseStatus === "active") return state;
     if (state.trial) return state;
-    await supabaseAdmin.from("trial_sessions").insert({ teacher_id: context.userId });
+    await supabaseAdmin.from("trial_sessions").insert({
+      teacher_id: context.userId,
+      ends_at: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
+    });
     await supabaseAdmin
       .from("teachers")
       .update({ license_status: "trial" })
