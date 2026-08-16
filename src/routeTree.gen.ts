@@ -14,8 +14,11 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as ActivateRouteImport } from './routes/activate'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as TrialEndedRouteImport } from './routes/trial-ended'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAttendanceRouteImport } from './routes/_authenticated/attendance'
 import { Route as AuthenticatedBackupRouteImport } from './routes/_authenticated/backup'
+import { Route as AuthenticatedCardsRouteImport } from './routes/_authenticated/cards'
+import { Route as AuthenticatedCertificatesRouteImport } from './routes/_authenticated/certificates'
 import { Route as AuthenticatedDashboardRouteImport } from './routes/_authenticated/dashboard'
 import { Route as AuthenticatedExamsRouteImport } from './routes/_authenticated/exams'
 import { Route as AuthenticatedGroupsRouteImport } from './routes/_authenticated/groups'
@@ -23,6 +26,7 @@ import { Route as AuthenticatedHomeworkRouteImport } from './routes/_authenticat
 import { Route as AuthenticatedNotificationsRouteImport } from './routes/_authenticated/notifications'
 import { Route as AuthenticatedPaymentsRouteImport } from './routes/_authenticated/payments'
 import { Route as AuthenticatedQuestionsRouteImport } from './routes/_authenticated/questions'
+import { Route as AuthenticatedReportsRouteImport } from './routes/_authenticated/reports'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedStudentsRouteImport } from './routes/_authenticated/students'
 import { Route as StudentIndexRouteImport } from './routes/student.index'
@@ -53,6 +57,11 @@ const TrialEndedRoute = TrialEndedRouteImport.update({
   path: '/trial-ended',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedAttendanceRoute = AuthenticatedAttendanceRouteImport.update({
   id: '/attendance',
   path: '/attendance',
@@ -63,6 +72,17 @@ const AuthenticatedBackupRoute = AuthenticatedBackupRouteImport.update({
   path: '/backup',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedCardsRoute = AuthenticatedCardsRouteImport.update({
+  id: '/cards',
+  path: '/cards',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
+const AuthenticatedCertificatesRoute =
+  AuthenticatedCertificatesRouteImport.update({
+    id: '/certificates',
+    path: '/certificates',
+    getParentRoute: () => AuthenticatedRouteRoute,
+  } as any)
 const AuthenticatedDashboardRoute = AuthenticatedDashboardRouteImport.update({
   id: '/dashboard',
   path: '/dashboard',
@@ -99,6 +119,11 @@ const AuthenticatedQuestionsRoute = AuthenticatedQuestionsRouteImport.update({
   path: '/questions',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedReportsRoute = AuthenticatedReportsRouteImport.update({
+  id: '/reports',
+  path: '/reports',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedSettingsRoute = AuthenticatedSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -130,8 +155,11 @@ export interface FileRoutesByFullPath {
   '/activate': typeof ActivateRoute
   '/auth': typeof AuthRoute
   '/trial-ended': typeof TrialEndedRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/attendance': typeof AuthenticatedAttendanceRoute
   '/backup': typeof AuthenticatedBackupRoute
+  '/cards': typeof AuthenticatedCardsRoute
+  '/certificates': typeof AuthenticatedCertificatesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/exams': typeof AuthenticatedExamsRoute
   '/groups': typeof AuthenticatedGroupsRoute
@@ -139,6 +167,7 @@ export interface FileRoutesByFullPath {
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/payments': typeof AuthenticatedPaymentsRoute
   '/questions': typeof AuthenticatedQuestionsRoute
+  '/reports': typeof AuthenticatedReportsRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/students': typeof AuthenticatedStudentsRouteWithChildren
   '/student/register': typeof StudentRegisterRoute
@@ -150,8 +179,11 @@ export interface FileRoutesByTo {
   '/activate': typeof ActivateRoute
   '/auth': typeof AuthRoute
   '/trial-ended': typeof TrialEndedRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/attendance': typeof AuthenticatedAttendanceRoute
   '/backup': typeof AuthenticatedBackupRoute
+  '/cards': typeof AuthenticatedCardsRoute
+  '/certificates': typeof AuthenticatedCertificatesRoute
   '/dashboard': typeof AuthenticatedDashboardRoute
   '/exams': typeof AuthenticatedExamsRoute
   '/groups': typeof AuthenticatedGroupsRoute
@@ -159,6 +191,7 @@ export interface FileRoutesByTo {
   '/notifications': typeof AuthenticatedNotificationsRoute
   '/payments': typeof AuthenticatedPaymentsRoute
   '/questions': typeof AuthenticatedQuestionsRoute
+  '/reports': typeof AuthenticatedReportsRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/students': typeof AuthenticatedStudentsRouteWithChildren
   '/student/register': typeof StudentRegisterRoute
@@ -172,8 +205,11 @@ export interface FileRoutesById {
   '/activate': typeof ActivateRoute
   '/auth': typeof AuthRoute
   '/trial-ended': typeof TrialEndedRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/attendance': typeof AuthenticatedAttendanceRoute
   '/_authenticated/backup': typeof AuthenticatedBackupRoute
+  '/_authenticated/cards': typeof AuthenticatedCardsRoute
+  '/_authenticated/certificates': typeof AuthenticatedCertificatesRoute
   '/_authenticated/dashboard': typeof AuthenticatedDashboardRoute
   '/_authenticated/exams': typeof AuthenticatedExamsRoute
   '/_authenticated/groups': typeof AuthenticatedGroupsRoute
@@ -181,6 +217,7 @@ export interface FileRoutesById {
   '/_authenticated/notifications': typeof AuthenticatedNotificationsRoute
   '/_authenticated/payments': typeof AuthenticatedPaymentsRoute
   '/_authenticated/questions': typeof AuthenticatedQuestionsRoute
+  '/_authenticated/reports': typeof AuthenticatedReportsRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/students': typeof AuthenticatedStudentsRouteWithChildren
   '/student/register': typeof StudentRegisterRoute
@@ -194,8 +231,11 @@ export interface FileRouteTypes {
     | '/activate'
     | '/auth'
     | '/trial-ended'
+    | '/admin'
     | '/attendance'
     | '/backup'
+    | '/cards'
+    | '/certificates'
     | '/dashboard'
     | '/exams'
     | '/groups'
@@ -203,6 +243,7 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/payments'
     | '/questions'
+    | '/reports'
     | '/settings'
     | '/students'
     | '/student/register'
@@ -214,8 +255,11 @@ export interface FileRouteTypes {
     | '/activate'
     | '/auth'
     | '/trial-ended'
+    | '/admin'
     | '/attendance'
     | '/backup'
+    | '/cards'
+    | '/certificates'
     | '/dashboard'
     | '/exams'
     | '/groups'
@@ -223,6 +267,7 @@ export interface FileRouteTypes {
     | '/notifications'
     | '/payments'
     | '/questions'
+    | '/reports'
     | '/settings'
     | '/students'
     | '/student/register'
@@ -235,8 +280,11 @@ export interface FileRouteTypes {
     | '/activate'
     | '/auth'
     | '/trial-ended'
+    | '/_authenticated/admin'
     | '/_authenticated/attendance'
     | '/_authenticated/backup'
+    | '/_authenticated/cards'
+    | '/_authenticated/certificates'
     | '/_authenticated/dashboard'
     | '/_authenticated/exams'
     | '/_authenticated/groups'
@@ -244,6 +292,7 @@ export interface FileRouteTypes {
     | '/_authenticated/notifications'
     | '/_authenticated/payments'
     | '/_authenticated/questions'
+    | '/_authenticated/reports'
     | '/_authenticated/settings'
     | '/_authenticated/students'
     | '/student/register'
@@ -298,6 +347,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof TrialEndedRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/attendance': {
       id: '/_authenticated/attendance'
       path: '/attendance'
@@ -310,6 +366,20 @@ declare module '@tanstack/react-router' {
       path: '/backup'
       fullPath: '/backup'
       preLoaderRoute: typeof AuthenticatedBackupRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/cards': {
+      id: '/_authenticated/cards'
+      path: '/cards'
+      fullPath: '/cards'
+      preLoaderRoute: typeof AuthenticatedCardsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/certificates': {
+      id: '/_authenticated/certificates'
+      path: '/certificates'
+      fullPath: '/certificates'
+      preLoaderRoute: typeof AuthenticatedCertificatesRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/dashboard': {
@@ -359,6 +429,13 @@ declare module '@tanstack/react-router' {
       path: '/questions'
       fullPath: '/questions'
       preLoaderRoute: typeof AuthenticatedQuestionsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
+    '/_authenticated/reports': {
+      id: '/_authenticated/reports'
+      path: '/reports'
+      fullPath: '/reports'
+      preLoaderRoute: typeof AuthenticatedReportsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/settings': {
@@ -413,8 +490,11 @@ const AuthenticatedStudentsRouteWithChildren =
   )
 
 interface AuthenticatedRouteRouteChildren {
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedAttendanceRoute: typeof AuthenticatedAttendanceRoute
   AuthenticatedBackupRoute: typeof AuthenticatedBackupRoute
+  AuthenticatedCardsRoute: typeof AuthenticatedCardsRoute
+  AuthenticatedCertificatesRoute: typeof AuthenticatedCertificatesRoute
   AuthenticatedDashboardRoute: typeof AuthenticatedDashboardRoute
   AuthenticatedExamsRoute: typeof AuthenticatedExamsRoute
   AuthenticatedGroupsRoute: typeof AuthenticatedGroupsRoute
@@ -422,13 +502,17 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedNotificationsRoute: typeof AuthenticatedNotificationsRoute
   AuthenticatedPaymentsRoute: typeof AuthenticatedPaymentsRoute
   AuthenticatedQuestionsRoute: typeof AuthenticatedQuestionsRoute
+  AuthenticatedReportsRoute: typeof AuthenticatedReportsRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedStudentsRoute: typeof AuthenticatedStudentsRouteWithChildren
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedAttendanceRoute: AuthenticatedAttendanceRoute,
   AuthenticatedBackupRoute: AuthenticatedBackupRoute,
+  AuthenticatedCardsRoute: AuthenticatedCardsRoute,
+  AuthenticatedCertificatesRoute: AuthenticatedCertificatesRoute,
   AuthenticatedDashboardRoute: AuthenticatedDashboardRoute,
   AuthenticatedExamsRoute: AuthenticatedExamsRoute,
   AuthenticatedGroupsRoute: AuthenticatedGroupsRoute,
@@ -436,6 +520,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedNotificationsRoute: AuthenticatedNotificationsRoute,
   AuthenticatedPaymentsRoute: AuthenticatedPaymentsRoute,
   AuthenticatedQuestionsRoute: AuthenticatedQuestionsRoute,
+  AuthenticatedReportsRoute: AuthenticatedReportsRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedStudentsRoute: AuthenticatedStudentsRouteWithChildren,
 }
