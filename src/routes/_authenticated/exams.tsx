@@ -130,7 +130,7 @@ function ExamsPage() {
   });
 
   const update = useMutation({
-    mutationFn: async ({ id, patch }: { id: string; patch: Record<string, unknown> }) => {
+    mutationFn: async ({ id, patch }: { id: string; patch: { status?: string; results_published?: boolean } }) => {
       const { error } = await supabase.from("exams").update(patch).eq("id", id);
       if (error) throw error;
     },
