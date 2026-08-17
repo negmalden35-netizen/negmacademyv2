@@ -52,9 +52,9 @@ function StudentExamPage() {
           })),
         },
       }),
-    onSuccess: (result: { percentage?: number }) => {
+    onSuccess: (result) => {
       toast.success(
-        result?.percentage != null ? `تم التسليم — نتيجتك ${Math.round(result.percentage)}%` : "تم تسليم الاختبار",
+        result?.needsManual ? "تم تسليم الاختبار، بانتظار تصحيح المعلم" : "تم تسليم الاختبار بنجاح",
       );
       navigate({ to: "/student/dashboard" });
     },
