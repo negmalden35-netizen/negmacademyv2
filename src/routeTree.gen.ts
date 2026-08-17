@@ -30,8 +30,10 @@ import { Route as AuthenticatedReportsRouteImport } from './routes/_authenticate
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedStudentsRouteImport } from './routes/_authenticated/students'
 import { Route as StudentIndexRouteImport } from './routes/student.index'
+import { Route as StudentDashboardRouteImport } from './routes/student.dashboard'
 import { Route as StudentRegisterRouteImport } from './routes/student.register'
 import { Route as AuthenticatedStudentsIdRouteImport } from './routes/_authenticated/students.$id'
+import { Route as StudentExamIdRouteImport } from './routes/student.exam.$id'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
@@ -139,6 +141,11 @@ const StudentIndexRoute = StudentIndexRouteImport.update({
   path: '/student/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const StudentDashboardRoute = StudentDashboardRouteImport.update({
+  id: '/student/dashboard',
+  path: '/student/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const StudentRegisterRoute = StudentRegisterRouteImport.update({
   id: '/student/register',
   path: '/student/register',
@@ -148,6 +155,11 @@ const AuthenticatedStudentsIdRoute = AuthenticatedStudentsIdRouteImport.update({
   id: '/$id',
   path: '/$id',
   getParentRoute: () => AuthenticatedStudentsRoute,
+} as any)
+const StudentExamIdRoute = StudentExamIdRouteImport.update({
+  id: '/student/exam/$id',
+  path: '/student/exam/$id',
+  getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
@@ -170,9 +182,11 @@ export interface FileRoutesByFullPath {
   '/reports': typeof AuthenticatedReportsRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/students': typeof AuthenticatedStudentsRouteWithChildren
+  '/student/dashboard': typeof StudentDashboardRoute
   '/student/register': typeof StudentRegisterRoute
   '/student/': typeof StudentIndexRoute
   '/students/$id': typeof AuthenticatedStudentsIdRoute
+  '/student/exam/$id': typeof StudentExamIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -194,9 +208,11 @@ export interface FileRoutesByTo {
   '/reports': typeof AuthenticatedReportsRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/students': typeof AuthenticatedStudentsRouteWithChildren
+  '/student/dashboard': typeof StudentDashboardRoute
   '/student/register': typeof StudentRegisterRoute
   '/student': typeof StudentIndexRoute
   '/students/$id': typeof AuthenticatedStudentsIdRoute
+  '/student/exam/$id': typeof StudentExamIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -220,9 +236,11 @@ export interface FileRoutesById {
   '/_authenticated/reports': typeof AuthenticatedReportsRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/students': typeof AuthenticatedStudentsRouteWithChildren
+  '/student/dashboard': typeof StudentDashboardRoute
   '/student/register': typeof StudentRegisterRoute
   '/student/': typeof StudentIndexRoute
   '/_authenticated/students/$id': typeof AuthenticatedStudentsIdRoute
+  '/student/exam/$id': typeof StudentExamIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -246,9 +264,11 @@ export interface FileRouteTypes {
     | '/reports'
     | '/settings'
     | '/students'
+    | '/student/dashboard'
     | '/student/register'
     | '/student/'
     | '/students/$id'
+    | '/student/exam/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -270,9 +290,11 @@ export interface FileRouteTypes {
     | '/reports'
     | '/settings'
     | '/students'
+    | '/student/dashboard'
     | '/student/register'
     | '/student'
     | '/students/$id'
+    | '/student/exam/$id'
   id:
     | '__root__'
     | '/'
@@ -295,9 +317,11 @@ export interface FileRouteTypes {
     | '/_authenticated/reports'
     | '/_authenticated/settings'
     | '/_authenticated/students'
+    | '/student/dashboard'
     | '/student/register'
     | '/student/'
     | '/_authenticated/students/$id'
+    | '/student/exam/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -306,8 +330,10 @@ export interface RootRouteChildren {
   ActivateRoute: typeof ActivateRoute
   AuthRoute: typeof AuthRoute
   TrialEndedRoute: typeof TrialEndedRoute
+  StudentDashboardRoute: typeof StudentDashboardRoute
   StudentRegisterRoute: typeof StudentRegisterRoute
   StudentIndexRoute: typeof StudentIndexRoute
+  StudentExamIdRoute: typeof StudentExamIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -459,6 +485,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof StudentIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/student/dashboard': {
+      id: '/student/dashboard'
+      path: '/student/dashboard'
+      fullPath: '/student/dashboard'
+      preLoaderRoute: typeof StudentDashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/student/register': {
       id: '/student/register'
       path: '/student/register'
@@ -472,6 +505,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/students/$id'
       preLoaderRoute: typeof AuthenticatedStudentsIdRouteImport
       parentRoute: typeof AuthenticatedStudentsRoute
+    }
+    '/student/exam/$id': {
+      id: '/student/exam/$id'
+      path: '/student/exam/$id'
+      fullPath: '/student/exam/$id'
+      preLoaderRoute: typeof StudentExamIdRouteImport
+      parentRoute: typeof rootRouteImport
     }
   }
 }
@@ -534,8 +574,10 @@ const rootRouteChildren: RootRouteChildren = {
   ActivateRoute: ActivateRoute,
   AuthRoute: AuthRoute,
   TrialEndedRoute: TrialEndedRoute,
+  StudentDashboardRoute: StudentDashboardRoute,
   StudentRegisterRoute: StudentRegisterRoute,
   StudentIndexRoute: StudentIndexRoute,
+  StudentExamIdRoute: StudentExamIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
