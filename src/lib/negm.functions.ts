@@ -216,6 +216,14 @@ export const generateAiExam = createServerFn({ method: "POST" })
 
 /* ------------------------------- مالك المنصة ------------------------------- */
 
+export const checkSuperAdmin = createServerFn({ method: "GET" })
+  .middleware([requireSupabaseAuth])
+  .handler(async ({ context }) => {
+    const { requireSuperAdmin } = await import("./negm.server");
+    await requireSuperAdmin(context.userId);
+    return { ok: true };
+  });
+
 export const adminOverview = createServerFn({ method: "GET" })
   .middleware([requireSupabaseAuth])
   .handler(async ({ context }) => {

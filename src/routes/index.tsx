@@ -1,19 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import {
-  GraduationCap,
-  ShieldCheck,
-  Sparkles,
-  Wallet,
-  CalendarCheck,
-  MessageCircle,
-  ArrowLeft,
-  Users,
-  Crown,
-  IdCard,
-  Award,
-  BarChart3,
-  Star,
-} from "lucide-react";
+import { GraduationCap, ShieldCheck, Sparkles, Wallet, CalendarCheck, MessageCircle, ArrowLeft, Users, Crown, IdCard, Award, ChartBar as BarChart3, Star } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Logo, PoweredBy } from "@/components/negm/Logo";
@@ -40,10 +26,10 @@ export const Route = createFileRoute("/")({
 
 const DOORS = [
   {
-    to: "/admin",
+    to: "/auth",
     icon: Crown,
     title: "بوابة مالك المنصة",
-    text: "تفعيل السناتر، إصدار أكواد التراخيص، وإدارة كل المعلمين والاشتراكات.",
+    text: "تفعيل السناتر، إصدار أكواد التراخيص، وإدارة كل المعلمين والاشتراكات. الدخول لحسابات مالك المنصة فقط.",
     cta: "دخول مالك المنصة",
     tone: "gold",
   },
