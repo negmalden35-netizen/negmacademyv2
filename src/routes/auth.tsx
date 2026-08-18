@@ -10,7 +10,19 @@ import { Label } from "@/components/ui/label";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Logo, PoweredBy } from "@/components/negm/Logo";
-import { Loader2 } from "lucide-react";
+import { Loader as Loader2 } from "lucide-react";
+
+async function redirectAfterLogin(navigate: ReturnType<typeof useNavigate>) {
+  const { data: userData } = await supabase.auth.getUser();
+  const uid = userData.user?.id;
+  if (!uid) {
+    navigate({ to: "/dashboard" });
+    return;
+  }
+  const { data: roles } = await supabase.from("user_roles").select("role").eq("user_id", uid);
+  const isSuperAdmin = (roles ?? []).some((r) => r.role === "super_admin");
+  navigate({ to: isSuperAdmin ? "/admin" : "/dashboard" });
+}
 
 export const Route = createFileRoute("/auth")({
   head: () => ({
@@ -50,7 +62,7 @@ function AuthPage() {
       return;
     }
     toast.success("تم تسجيل الدخول بنجاح");
-    navigate({ to: "/dashboard" });
+    await redirectAfterLogin(navigate);
   }
 
   async function handleSignup(e: React.FormEvent) {
@@ -83,7 +95,7 @@ function AuthPage() {
     }
     if (data.session) {
       toast.success("تم إنشاء الحساب");
-      navigate({ to: "/dashboard" });
+      await redirectAfterLogin(navigate);
     } else {
       toast.success("تم إرسال رسالة تأكيد إلى بريدك الإلكتروني، فعّل حسابك ثم سجّل الدخول");
     }
@@ -98,7 +110,7 @@ function AuthPage() {
       return;
     }
     if (result.redirected) return;
-    navigate({ to: "/dashboard" });
+    await redirectAfterLogin(navigate);
   }
 
   return (

@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
@@ -35,6 +35,7 @@ import {
   adminOverview,
   adminSetLicenseStatus,
   adminSetTeacherSuspended,
+  checkSuperAdmin,
 } from "@/lib/negm.functions";
 import { LICENSE_STATUS_LABEL, formatDateTime } from "@/lib/negm";
 
@@ -47,8 +48,32 @@ export const Route = createFileRoute("/_authenticated/admin")({
       { property: "og:description", content: "تحكم كامل في تراخيص السناتر." },
     ],
   }),
+  beforeLoad: async () => {
+    try {
+      await checkSuperAdmin();
+      return { isSuperAdmin: true };
+    } catch {
+      throw new Error("ليس لديك صلاحية للوصول إلى هذه الصفحة");
+    }
+  },
+  errorComponent: AdminAccessDenied,
   component: AdminPage,
 });
+
+function AdminAccessDenied() {
+  return (
+    <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background px-4 text-center">
+      <ShieldBan className="size-12 text-destructive" />
+      <h1 className="text-xl font-bold">ليس لديك صلاحية للوصول إلى هذه الصفحة</h1>
+      <p className="text-sm text-muted-foreground">
+        هذه اللوحة متاحة لمالك المنصة فقط. إذا كان لديك حساب مالك المنصة فسجل الدخول به.
+      </p>
+      <Button asChild>
+        <Link to="/dashboard">العودة إلى لوحة المعلم</Link>
+      </Button>
+    </div>
+  );
+}
 
 function AdminPage() {
   const queryClient = useQueryClient();
