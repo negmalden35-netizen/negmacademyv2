@@ -1,0 +1,11 @@
+# Tech Stack
+- React with TypeScript for type-safe component development
+- React Router for client-side routing (keep routes in src/App.tsx)
+- Tailwind CSS for utility-first styling and responsive design
+- shadcn/ui library for pre-built, accessible UI components
+- Lucide React for consistent, lightweight icon set
+- Radix UI primitives (already installed) for low-level UI behavior
+- Source code organization: pages in src/pages/, components in src/components/
+- Main entry point: src/pages/Index.tsx (default page)
+- Keep all styling in Tailwind classes; avoid custom CSS unless absolutely necessary
+- When extending shadcn/ui components, create new wrapper components rather than editing the library files
