@@ -81,6 +81,14 @@ function Landing() {
               size="sm"
               className="border-primary-foreground/40 bg-transparent text-primary-foreground hover:bg-primary-foreground/10"
             >
+              <Link to="/guide">دليل الاستخدام</Link>
+            </Button>
+            <Button
+              asChild
+              variant="outline"
+              size="sm"
+              className="border-primary-foreground/40 bg-transparent text-primary-foreground hover:bg-primary-foreground/10"
+            >
               <Link to="/student">دخول الطالب</Link>
             </Button>
           </div>
@@ -162,6 +170,9 @@ function Landing() {
           <div className="mt-5 flex flex-wrap justify-center gap-3">
             <Button asChild size="lg">
               <Link to="/auth">ابدأ الآن</Link>
+            </Button>
+            <Button asChild size="lg" variant="outline">
+              <Link to="/guide">دليل الاستخدام والدخول</Link>
             </Button>
             <Button asChild size="lg" variant="outline">
               <a href={WHATSAPP_LINK} target="_blank" rel="noreferrer">

@@ -13,6 +13,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as ActivateRouteImport } from './routes/activate'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as GuideRouteImport } from './routes/guide'
 import { Route as TrialEndedRouteImport } from './routes/trial-ended'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAttendanceRouteImport } from './routes/_authenticated/attendance'
@@ -52,6 +53,11 @@ const ActivateRoute = ActivateRouteImport.update({
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GuideRoute = GuideRouteImport.update({
+  id: '/guide',
+  path: '/guide',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TrialEndedRoute = TrialEndedRouteImport.update({
@@ -166,6 +172,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/activate': typeof ActivateRoute
   '/auth': typeof AuthRoute
+  '/guide': typeof GuideRoute
   '/trial-ended': typeof TrialEndedRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/attendance': typeof AuthenticatedAttendanceRoute
@@ -192,6 +199,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/activate': typeof ActivateRoute
   '/auth': typeof AuthRoute
+  '/guide': typeof GuideRoute
   '/trial-ended': typeof TrialEndedRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/attendance': typeof AuthenticatedAttendanceRoute
@@ -220,6 +228,7 @@ export interface FileRoutesById {
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/activate': typeof ActivateRoute
   '/auth': typeof AuthRoute
+  '/guide': typeof GuideRoute
   '/trial-ended': typeof TrialEndedRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/attendance': typeof AuthenticatedAttendanceRoute
@@ -248,6 +257,7 @@ export interface FileRouteTypes {
     | '/'
     | '/activate'
     | '/auth'
+    | '/guide'
     | '/trial-ended'
     | '/admin'
     | '/attendance'
@@ -274,6 +284,7 @@ export interface FileRouteTypes {
     | '/'
     | '/activate'
     | '/auth'
+    | '/guide'
     | '/trial-ended'
     | '/admin'
     | '/attendance'
@@ -301,6 +312,7 @@ export interface FileRouteTypes {
     | '/_authenticated'
     | '/activate'
     | '/auth'
+    | '/guide'
     | '/trial-ended'
     | '/_authenticated/admin'
     | '/_authenticated/attendance'
@@ -329,6 +341,7 @@ export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   ActivateRoute: typeof ActivateRoute
   AuthRoute: typeof AuthRoute
+  GuideRoute: typeof GuideRoute
   TrialEndedRoute: typeof TrialEndedRoute
   StudentDashboardRoute: typeof StudentDashboardRoute
   StudentRegisterRoute: typeof StudentRegisterRoute
@@ -364,6 +377,13 @@ declare module '@tanstack/react-router' {
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/guide': {
+      id: '/guide'
+      path: '/guide'
+      fullPath: '/guide'
+      preLoaderRoute: typeof GuideRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/trial-ended': {
@@ -573,6 +593,7 @@ const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   ActivateRoute: ActivateRoute,
   AuthRoute: AuthRoute,
+  GuideRoute: GuideRoute,
   TrialEndedRoute: TrialEndedRoute,
   StudentDashboardRoute: StudentDashboardRoute,
   StudentRegisterRoute: StudentRegisterRoute,
