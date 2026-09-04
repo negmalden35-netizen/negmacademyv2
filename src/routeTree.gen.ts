@@ -14,6 +14,7 @@ import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/
 import { Route as ActivateRouteImport } from './routes/activate'
 import { Route as AuthRouteImport } from './routes/auth'
 import { Route as GuideRouteImport } from './routes/guide'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as TrialEndedRouteImport } from './routes/trial-ended'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedAttendanceRouteImport } from './routes/_authenticated/attendance'
@@ -58,6 +59,11 @@ const AuthRoute = AuthRouteImport.update({
 const GuideRoute = GuideRouteImport.update({
   id: '/guide',
   path: '/guide',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const TrialEndedRoute = TrialEndedRouteImport.update({
@@ -173,6 +179,7 @@ export interface FileRoutesByFullPath {
   '/activate': typeof ActivateRoute
   '/auth': typeof AuthRoute
   '/guide': typeof GuideRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/trial-ended': typeof TrialEndedRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/attendance': typeof AuthenticatedAttendanceRoute
@@ -200,6 +207,7 @@ export interface FileRoutesByTo {
   '/activate': typeof ActivateRoute
   '/auth': typeof AuthRoute
   '/guide': typeof GuideRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/trial-ended': typeof TrialEndedRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/attendance': typeof AuthenticatedAttendanceRoute
@@ -229,6 +237,7 @@ export interface FileRoutesById {
   '/activate': typeof ActivateRoute
   '/auth': typeof AuthRoute
   '/guide': typeof GuideRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/trial-ended': typeof TrialEndedRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/attendance': typeof AuthenticatedAttendanceRoute
@@ -258,6 +267,7 @@ export interface FileRouteTypes {
     | '/activate'
     | '/auth'
     | '/guide'
+    | '/reset-password'
     | '/trial-ended'
     | '/admin'
     | '/attendance'
@@ -285,6 +295,7 @@ export interface FileRouteTypes {
     | '/activate'
     | '/auth'
     | '/guide'
+    | '/reset-password'
     | '/trial-ended'
     | '/admin'
     | '/attendance'
@@ -313,6 +324,7 @@ export interface FileRouteTypes {
     | '/activate'
     | '/auth'
     | '/guide'
+    | '/reset-password'
     | '/trial-ended'
     | '/_authenticated/admin'
     | '/_authenticated/attendance'
@@ -342,6 +354,7 @@ export interface RootRouteChildren {
   ActivateRoute: typeof ActivateRoute
   AuthRoute: typeof AuthRoute
   GuideRoute: typeof GuideRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   TrialEndedRoute: typeof TrialEndedRoute
   StudentDashboardRoute: typeof StudentDashboardRoute
   StudentRegisterRoute: typeof StudentRegisterRoute
@@ -384,6 +397,13 @@ declare module '@tanstack/react-router' {
       path: '/guide'
       fullPath: '/guide'
       preLoaderRoute: typeof GuideRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/trial-ended': {
@@ -594,6 +614,7 @@ const rootRouteChildren: RootRouteChildren = {
   ActivateRoute: ActivateRoute,
   AuthRoute: AuthRoute,
   GuideRoute: GuideRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   TrialEndedRoute: TrialEndedRoute,
   StudentDashboardRoute: StudentDashboardRoute,
   StudentRegisterRoute: StudentRegisterRoute,
