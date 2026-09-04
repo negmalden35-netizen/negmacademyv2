@@ -172,6 +172,9 @@ function Landing() {
               <Link to="/auth">ابدأ الآن</Link>
             </Button>
             <Button asChild size="lg" variant="outline">
+              <Link to="/guide">دليل الاستخدام والدخول</Link>
+            </Button>
+            <Button asChild size="lg" variant="outline">
               <a href={WHATSAPP_LINK} target="_blank" rel="noreferrer">
                 <MessageCircle className="size-4" /> واتساب {WHATSAPP_NUMBER}
               </a>
