@@ -81,6 +81,14 @@ function Landing() {
               size="sm"
               className="border-primary-foreground/40 bg-transparent text-primary-foreground hover:bg-primary-foreground/10"
             >
+              <Link to="/guide">دليل الاستخدام</Link>
+            </Button>
+            <Button
+              asChild
+              variant="outline"
+              size="sm"
+              className="border-primary-foreground/40 bg-transparent text-primary-foreground hover:bg-primary-foreground/10"
+            >
               <Link to="/student">دخول الطالب</Link>
             </Button>
           </div>
