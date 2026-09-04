@@ -143,8 +143,16 @@ function AuthPage() {
                 <Button className="w-full" disabled={loading}>
                   {loading ? <Loader2 className="size-4 animate-spin" /> : null} دخول
                 </Button>
+                <button
+                  type="button"
+                  onClick={handleForgot}
+                  className="w-full text-center text-xs font-semibold text-muted-foreground underline"
+                >
+                  نسيت كلمة المرور؟ إرسال رابط الاستعادة
+                </button>
               </form>
             </TabsContent>
+
 
             <TabsContent value="signup">
               <form className="space-y-4 pt-4" onSubmit={handleSignup}>
