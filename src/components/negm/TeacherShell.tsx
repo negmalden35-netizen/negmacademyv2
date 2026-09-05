@@ -179,11 +179,11 @@ export function TeacherShell({
             </div>
           </div>
           <div className="flex items-center gap-2">
-            {data?.licenseStatus === "trial" && data?.trialEndsAt ? (
+            {!data?.isSuperAdmin && data?.trialActive && data?.trialEndsAt ? (
               <TrialCountdown endsAt={data.trialEndsAt} />
             ) : (
               <Badge variant="secondary">
-                {LICENSE_STATUS_LABEL[data?.licenseStatus ?? "pending"]}
+                {data?.isSuperAdmin ? "مالك المنصة" : LICENSE_STATUS_LABEL[data?.licenseStatus ?? "pending"]}
               </Badge>
             )}
             <Button
