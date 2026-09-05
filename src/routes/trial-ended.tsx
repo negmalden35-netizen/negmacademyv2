@@ -29,6 +29,10 @@ function TrialEnded() {
   const queryClient = useQueryClient();
   const start = useServerFn(startTrial);
 
+  useEffect(() => {
+    if (data?.isSuperAdmin) navigate({ to: "/admin", replace: true });
+  }, [data, navigate]);
+
   const mutation = useMutation({
     mutationFn: () => start(),
     onSuccess: async () => {
@@ -39,7 +43,8 @@ function TrialEnded() {
     onError: () => toast.error("تعذر بدء التجربة"),
   });
 
-  if (isLoading) return <LoadingState />;
+  if (isLoading || data?.isSuperAdmin) return <LoadingState />;
+
 
   const neverTried = !data?.trial;
   const suspended = data?.suspended || data?.licenseStatus === "suspended" || data?.licenseStatus === "revoked";
