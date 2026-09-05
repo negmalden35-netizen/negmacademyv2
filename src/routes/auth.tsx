@@ -112,11 +112,20 @@ function AuthPage() {
       return;
     }
     if (data.session) {
-      toast.success("تم إنشاء الحساب");
+      toast.success("تم إنشاء الحساب وتسجيل الدخول");
       await redirectAfterLogin(navigate);
-    } else {
-      toast.success("تم إرسال رسالة تأكيد إلى بريدك الإلكتروني، فعّل حسابك ثم سجّل الدخول");
+      return;
     }
+    const { error: signInError } = await supabase.auth.signInWithPassword({
+      email: parsed.data.email,
+      password,
+    });
+    if (signInError) {
+      toast.error("تم إنشاء الحساب، سجّل الدخول من تبويب تسجيل الدخول");
+      return;
+    }
+    toast.success("تم إنشاء الحساب وتسجيل الدخول");
+    await redirectAfterLogin(navigate);
   }
 
   async function handleGoogle() {
