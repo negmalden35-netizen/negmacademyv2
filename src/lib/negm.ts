@@ -3,7 +3,7 @@ export const PLATFORM_TAGLINE = "منصة نجم لإدارة السناتر";
 export const WHATSAPP_NUMBER = "01015174084";
 export const WHATSAPP_LINK = `https://wa.me/2${WHATSAPP_NUMBER}`;
 export const TRIAL_MINUTES = 60;
-export const SUPER_ADMIN_EMAIL = "negm@negm.app";
+export const SUPER_ADMIN_EMAIL = "negmalden35@gmail.com";
 
 export const STUDENT_TOKEN_KEY = "negm_student_code";
 

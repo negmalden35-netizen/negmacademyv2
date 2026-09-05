@@ -47,6 +47,24 @@ function AuthPage() {
   const [fullName, setFullName] = useState("");
   const [centerName, setCenterName] = useState("");
 
+  async function handleForgot() {
+    const parsed = emailSchema.safeParse(email);
+    if (!parsed.success) {
+      toast.error("أدخل بريدك الإلكتروني في الحقل أولًا");
+      return;
+    }
+    setLoading(true);
+    const { error } = await supabase.auth.resetPasswordForEmail(parsed.data, {
+      redirectTo: `${window.location.origin}/reset-password`,
+    });
+    setLoading(false);
+    if (error) {
+      toast.error("تعذر إرسال رابط الاستعادة");
+      return;
+    }
+    toast.success("تم إرسال رابط استعادة كلمة المرور إلى بريدك الإلكتروني");
+  }
+
   async function handleLogin(e: React.FormEvent) {
     e.preventDefault();
     const parsed = z.object({ email: emailSchema, password: passwordSchema }).safeParse({ email, password });
