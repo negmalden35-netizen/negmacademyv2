@@ -280,21 +280,34 @@ function AdminPage() {
                             </Badge>
                           </TableCell>
                           <TableCell>
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => setSuspended.mutate({ teacherId: t.id, suspended: !t.is_suspended })}
-                            >
-                              {t.is_suspended ? (
-                                <>
-                                  <ShieldCheck className="size-4 text-success" /> تفعيل
-                                </>
-                              ) : (
-                                <>
-                                  <ShieldBan className="size-4 text-destructive" /> إيقاف
-                                </>
-                              )}
-                            </Button>
+                            <div className="flex flex-wrap gap-1">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => setSuspended.mutate({ teacherId: t.id, suspended: !t.is_suspended })}
+                              >
+                                {t.is_suspended ? (
+                                  <>
+                                    <ShieldCheck className="size-4 text-success" /> تفعيل
+                                  </>
+                                ) : (
+                                  <>
+                                    <ShieldBan className="size-4 text-destructive" /> إيقاف
+                                  </>
+                                )}
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                disabled={!t.email || clearEmail.isPending}
+                                onClick={() => {
+                                  if (confirm(`حذف البريد الإلكتروني للمعلم «${t.full_name || t.center_name}»؟`))
+                                    clearEmail.mutate(t.id);
+                                }}
+                              >
+                                <MailX className="size-4 text-destructive" /> حذف البريد
+                              </Button>
+                            </div>
                           </TableCell>
                         </TableRow>
                       ))}
