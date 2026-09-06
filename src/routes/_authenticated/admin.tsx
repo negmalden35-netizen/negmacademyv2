@@ -3,7 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
-import { Copy, Plus, Search, ShieldBan, ShieldCheck } from "lucide-react";
+import { Copy, MailX, Plus, Search, ShieldBan, ShieldCheck } from "lucide-react";
 import { TeacherShell } from "@/components/negm/TeacherShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
