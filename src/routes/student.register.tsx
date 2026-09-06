@@ -95,6 +95,36 @@ function StudentRegister() {
     setForm((f) => ({ ...f, [key]: value }));
   }
 
+  if (!teacherId || (teacher.isFetched && !teacher.data)) {
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="hero-gradient px-4 py-8">
+          <div className="mx-auto max-w-3xl">
+            <Link to="/">
+              <Logo className="text-primary-foreground" subtitle="تسجيل طالب جديد" />
+            </Link>
+          </div>
+        </div>
+        <div className="mx-auto max-w-xl px-4 py-12">
+          <Card className="shadow-card">
+            <CardHeader>
+              <CardTitle>رابط التسجيل غير صالح</CardTitle>
+              <CardDescription>
+                التسجيل متاح فقط عبر رابط الدعوة الخاص بالسنتر أو المعلم. اطلب الرابط من معلمك ثم افتحه مرة أخرى.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button asChild className="w-full">
+                <Link to="/student">العودة لبوابة الطالب</Link>
+              </Button>
+            </CardContent>
+          </Card>
+          <PoweredBy className="mt-8" />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <div className="hero-gradient px-4 py-8">
@@ -109,7 +139,9 @@ function StudentRegister() {
           <CardHeader>
             <CardTitle>استمارة تسجيل الطالب</CardTitle>
             <CardDescription>
-              بعد الإرسال يظل طلبك «قيد المراجعة» حتى يعتمده المعلم ويصدر لك كود الدخول.
+              التسجيل لدى: {teacher.data?.center_name ?? "..."}
+              {teacher.data?.full_name ? ` — ${teacher.data.full_name}` : ""}. بعد الإرسال يظل طلبك «قيد المراجعة»
+              حتى يعتمده المعلم ويصدر لك كود الدخول.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -117,10 +149,6 @@ function StudentRegister() {
               className="grid gap-4 sm:grid-cols-2"
               onSubmit={(e) => {
                 e.preventDefault();
-                if (!teacherId) {
-                  toast.error("اختر المعلم / السنتر");
-                  return;
-                }
                 if (form.fullName.trim().split(/\s+/).length < 4) {
                   toast.error("اكتب الاسم رباعيًا");
                   return;
@@ -132,21 +160,6 @@ function StudentRegister() {
                 mutation.mutate();
               }}
             >
-              <div className="space-y-2 sm:col-span-2">
-                <Label>المعلم / السنتر</Label>
-                <Select value={teacherId} onValueChange={setTeacherId}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="اختر المعلم" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {(teachers.data ?? []).map((t) => (
-                      <SelectItem key={t.id} value={t.id}>
-                        {t.center_name} {t.full_name ? `— ${t.full_name}` : ""}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
 
               <div className="space-y-2 sm:col-span-2">
                 <Label>الاسم رباعي</Label>
