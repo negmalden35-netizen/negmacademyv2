@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/table";
 import { EmptyState, LoadingState } from "@/components/negm/states";
 import {
+  adminClearTeacherEmail,
   adminCreateLicense,
   adminOverview,
   adminSetLicenseStatus,
