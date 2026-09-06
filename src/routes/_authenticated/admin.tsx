@@ -126,6 +126,17 @@ function AdminPage() {
     onError: () => toast.error("تعذر تحديث حالة المعلم"),
   });
 
+  const clearEmail = useMutation({
+    mutationFn: (teacherId: string) => clearEmailFn({ data: { teacherId } }),
+    onSuccess: () => {
+      toast.success("تم حذف البريد الإلكتروني للمعلم");
+      invalidate();
+    },
+    onError: () => toast.error("تعذر حذف البريد الإلكتروني"),
+  });
+
+
+
   const teachers = useMemo(() => {
     const q = teacherSearch.trim();
     return (overview.data?.teachers ?? []).filter(
