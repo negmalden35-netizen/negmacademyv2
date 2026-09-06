@@ -11,10 +11,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Logo, PoweredBy } from "@/components/negm/Logo";
-import { listPublicTeachers, listTeacherGroups, registerStudent } from "@/lib/negm.functions";
+import { getPublicTeacher, listTeacherGroups, registerStudent } from "@/lib/negm.functions";
 import { GRADES } from "@/lib/negm";
 
 export const Route = createFileRoute("/student/register")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    t: typeof search["t"] === "string" ? (search["t"] as string) : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "تسجيل طالب جديد | منصة نجم" },
@@ -28,11 +31,11 @@ export const Route = createFileRoute("/student/register")({
 
 function StudentRegister() {
   const navigate = useNavigate();
-  const fetchTeachers = useServerFn(listPublicTeachers);
+  const { t: teacherId } = Route.useSearch();
+  const fetchTeacher = useServerFn(getPublicTeacher);
   const fetchGroups = useServerFn(listTeacherGroups);
   const register = useServerFn(registerStudent);
 
-  const [teacherId, setTeacherId] = useState("");
   const [form, setForm] = useState({
     fullName: "",
     gender: "",
@@ -49,12 +52,17 @@ function StudentRegister() {
     photoUrl: "",
   });
 
-  const teachers = useQuery({ queryKey: ["public-teachers"], queryFn: () => fetchTeachers() });
-  const groups = useQuery({
-    queryKey: ["public-groups", teacherId],
-    queryFn: () => fetchGroups({ data: { teacherId } }),
+  const teacher = useQuery({
+    queryKey: ["public-teacher", teacherId],
+    queryFn: () => fetchTeacher({ data: { teacherId: teacherId! } }),
     enabled: !!teacherId,
   });
+  const groups = useQuery({
+    queryKey: ["public-groups", teacherId],
+    queryFn: () => fetchGroups({ data: { teacherId: teacherId! } }),
+    enabled: !!teacherId,
+  });
+
 
   const mutation = useMutation({
     mutationFn: () =>
