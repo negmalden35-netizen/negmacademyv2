@@ -68,7 +68,7 @@ function StudentRegister() {
     mutationFn: () =>
       register({
         data: {
-          teacherId,
+          teacherId: teacherId!,
           fullName: form.fullName.trim(),
           gender: form.gender || undefined,
           birthDate: form.birthDate || undefined,
