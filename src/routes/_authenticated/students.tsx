@@ -3,14 +3,25 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
-import { Check, X, Eye, RefreshCw, Search, Trash2, Ban, Undo2 } from "lucide-react";
+import { Check, X, Eye, RefreshCw, Search, Trash2, Ban, Undo2, UserPlus, Link2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { TeacherShell } from "@/components/negm/TeacherShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -31,8 +42,9 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { EmptyState, TableSkeleton } from "@/components/negm/states";
-import { approveStudent, regenerateStudentCode } from "@/lib/negm.functions";
-import { STUDENT_STATUS_LABEL, formatDate } from "@/lib/negm";
+import { approveStudent, regenerateStudentCode, teacherCreateStudent } from "@/lib/negm.functions";
+import { STUDENT_STATUS_LABEL, GRADES, formatDate } from "@/lib/negm";
+import { useAccess } from "@/hooks/useNegm";
 
 export const Route = createFileRoute("/_authenticated/students")({
   head: () => ({
