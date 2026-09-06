@@ -3,7 +3,7 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
-import { Copy, Plus, Search, ShieldBan, ShieldCheck } from "lucide-react";
+import { Copy, MailX, Plus, Search, ShieldBan, ShieldCheck } from "lucide-react";
 import { TeacherShell } from "@/components/negm/TeacherShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -31,6 +31,7 @@ import {
 } from "@/components/ui/table";
 import { EmptyState, LoadingState } from "@/components/negm/states";
 import {
+  adminClearTeacherEmail,
   adminCreateLicense,
   adminOverview,
   adminSetLicenseStatus,
@@ -81,6 +82,7 @@ function AdminPage() {
   const createFn = useServerFn(adminCreateLicense);
   const statusFn = useServerFn(adminSetLicenseStatus);
   const suspendFn = useServerFn(adminSetTeacherSuspended);
+  const clearEmailFn = useServerFn(adminClearTeacherEmail);
 
   const [teacherSearch, setTeacherSearch] = useState("");
   const [licenseSearch, setLicenseSearch] = useState("");
@@ -123,6 +125,17 @@ function AdminPage() {
     },
     onError: () => toast.error("تعذر تحديث حالة المعلم"),
   });
+
+  const clearEmail = useMutation({
+    mutationFn: (teacherId: string) => clearEmailFn({ data: { teacherId } }),
+    onSuccess: () => {
+      toast.success("تم حذف البريد الإلكتروني للمعلم");
+      invalidate();
+    },
+    onError: () => toast.error("تعذر حذف البريد الإلكتروني"),
+  });
+
+
 
   const teachers = useMemo(() => {
     const q = teacherSearch.trim();
@@ -267,21 +280,34 @@ function AdminPage() {
                             </Badge>
                           </TableCell>
                           <TableCell>
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              onClick={() => setSuspended.mutate({ teacherId: t.id, suspended: !t.is_suspended })}
-                            >
-                              {t.is_suspended ? (
-                                <>
-                                  <ShieldCheck className="size-4 text-success" /> تفعيل
-                                </>
-                              ) : (
-                                <>
-                                  <ShieldBan className="size-4 text-destructive" /> إيقاف
-                                </>
-                              )}
-                            </Button>
+                            <div className="flex flex-wrap gap-1">
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                onClick={() => setSuspended.mutate({ teacherId: t.id, suspended: !t.is_suspended })}
+                              >
+                                {t.is_suspended ? (
+                                  <>
+                                    <ShieldCheck className="size-4 text-success" /> تفعيل
+                                  </>
+                                ) : (
+                                  <>
+                                    <ShieldBan className="size-4 text-destructive" /> إيقاف
+                                  </>
+                                )}
+                              </Button>
+                              <Button
+                                size="sm"
+                                variant="ghost"
+                                disabled={!t.email || clearEmail.isPending}
+                                onClick={() => {
+                                  if (confirm(`حذف البريد الإلكتروني للمعلم «${t.full_name || t.center_name}»؟`))
+                                    clearEmail.mutate(t.id);
+                                }}
+                              >
+                                <MailX className="size-4 text-destructive" /> حذف البريد
+                              </Button>
+                            </div>
                           </TableCell>
                         </TableRow>
                       ))}

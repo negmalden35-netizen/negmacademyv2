@@ -11,10 +11,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Logo, PoweredBy } from "@/components/negm/Logo";
-import { listPublicTeachers, listTeacherGroups, registerStudent } from "@/lib/negm.functions";
+import { getPublicTeacher, listTeacherGroups, registerStudent } from "@/lib/negm.functions";
 import { GRADES } from "@/lib/negm";
 
 export const Route = createFileRoute("/student/register")({
+  validateSearch: (search: Record<string, unknown>) => ({
+    t: typeof search["t"] === "string" ? (search["t"] as string) : undefined,
+  }),
   head: () => ({
     meta: [
       { title: "تسجيل طالب جديد | منصة نجم" },
@@ -28,11 +31,11 @@ export const Route = createFileRoute("/student/register")({
 
 function StudentRegister() {
   const navigate = useNavigate();
-  const fetchTeachers = useServerFn(listPublicTeachers);
+  const { t: teacherId } = Route.useSearch();
+  const fetchTeacher = useServerFn(getPublicTeacher);
   const fetchGroups = useServerFn(listTeacherGroups);
   const register = useServerFn(registerStudent);
 
-  const [teacherId, setTeacherId] = useState("");
   const [form, setForm] = useState({
     fullName: "",
     gender: "",
@@ -49,18 +52,23 @@ function StudentRegister() {
     photoUrl: "",
   });
 
-  const teachers = useQuery({ queryKey: ["public-teachers"], queryFn: () => fetchTeachers() });
-  const groups = useQuery({
-    queryKey: ["public-groups", teacherId],
-    queryFn: () => fetchGroups({ data: { teacherId } }),
+  const teacher = useQuery({
+    queryKey: ["public-teacher", teacherId],
+    queryFn: () => fetchTeacher({ data: { teacherId: teacherId! } }),
     enabled: !!teacherId,
   });
+  const groups = useQuery({
+    queryKey: ["public-groups", teacherId],
+    queryFn: () => fetchGroups({ data: { teacherId: teacherId! } }),
+    enabled: !!teacherId,
+  });
+
 
   const mutation = useMutation({
     mutationFn: () =>
       register({
         data: {
-          teacherId,
+          teacherId: teacherId!,
           fullName: form.fullName.trim(),
           gender: form.gender || undefined,
           birthDate: form.birthDate || undefined,
@@ -87,6 +95,36 @@ function StudentRegister() {
     setForm((f) => ({ ...f, [key]: value }));
   }
 
+  if (!teacherId || (teacher.isFetched && !teacher.data)) {
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="hero-gradient px-4 py-8">
+          <div className="mx-auto max-w-3xl">
+            <Link to="/">
+              <Logo className="text-primary-foreground" subtitle="تسجيل طالب جديد" />
+            </Link>
+          </div>
+        </div>
+        <div className="mx-auto max-w-xl px-4 py-12">
+          <Card className="shadow-card">
+            <CardHeader>
+              <CardTitle>رابط التسجيل غير صالح</CardTitle>
+              <CardDescription>
+                التسجيل متاح فقط عبر رابط الدعوة الخاص بالسنتر أو المعلم. اطلب الرابط من معلمك ثم افتحه مرة أخرى.
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <Button asChild className="w-full">
+                <Link to="/student">العودة لبوابة الطالب</Link>
+              </Button>
+            </CardContent>
+          </Card>
+          <PoweredBy className="mt-8" />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background">
       <div className="hero-gradient px-4 py-8">
@@ -101,7 +139,9 @@ function StudentRegister() {
           <CardHeader>
             <CardTitle>استمارة تسجيل الطالب</CardTitle>
             <CardDescription>
-              بعد الإرسال يظل طلبك «قيد المراجعة» حتى يعتمده المعلم ويصدر لك كود الدخول.
+              التسجيل لدى: {teacher.data?.center_name ?? "..."}
+              {teacher.data?.full_name ? ` — ${teacher.data.full_name}` : ""}. بعد الإرسال يظل طلبك «قيد المراجعة»
+              حتى يعتمده المعلم ويصدر لك كود الدخول.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -109,10 +149,6 @@ function StudentRegister() {
               className="grid gap-4 sm:grid-cols-2"
               onSubmit={(e) => {
                 e.preventDefault();
-                if (!teacherId) {
-                  toast.error("اختر المعلم / السنتر");
-                  return;
-                }
                 if (form.fullName.trim().split(/\s+/).length < 4) {
                   toast.error("اكتب الاسم رباعيًا");
                   return;
@@ -124,21 +160,6 @@ function StudentRegister() {
                 mutation.mutate();
               }}
             >
-              <div className="space-y-2 sm:col-span-2">
-                <Label>المعلم / السنتر</Label>
-                <Select value={teacherId} onValueChange={setTeacherId}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="اختر المعلم" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {(teachers.data ?? []).map((t) => (
-                      <SelectItem key={t.id} value={t.id}>
-                        {t.center_name} {t.full_name ? `— ${t.full_name}` : ""}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
 
               <div className="space-y-2 sm:col-span-2">
                 <Label>الاسم رباعي</Label>

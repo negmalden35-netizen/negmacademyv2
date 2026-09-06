@@ -509,3 +509,157 @@ export const studentSubmitHomework = createServerFn({ method: "POST" })
     if (error) throw new Error(error.message);
     return { ok: true };
   });
+
+/* --------------------- إضافات: إدارة المعلمين والمواد والاختبارات --------------------- */
+
+export const adminClearTeacherEmail = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: unknown) => z.object({ teacherId: z.string().uuid() }).parse(input))
+  .handler(async ({ data, context }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { requireSuperAdmin } = await import("./negm.server");
+    await requireSuperAdmin(context.userId);
+    const { error } = await supabaseAdmin
+      .from("teachers")
+      .update({ email: null })
+      .eq("id", data.teacherId);
+    if (error) throw new Error(error.message);
+    await supabaseAdmin.from("licenses").update({ email: null }).eq("teacher_id", data.teacherId);
+    await supabaseAdmin.from("audit_logs").insert({
+      teacher_id: context.userId,
+      action: "حذف بريد معلم",
+      entity: "teachers",
+      details: { teacher_id: data.teacherId },
+    });
+    return { ok: true };
+  });
+
+export const teacherCreateStudent = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: unknown) =>
+    z
+      .object({
+        fullName: z.string().trim().min(3).max(120),
+        phone: z.string().trim().max(20).optional(),
+        guardianPhone: z.string().trim().max(20).optional(),
+        gender: z.string().trim().max(20).optional(),
+        grade: z.string().trim().max(80).optional(),
+        section: z.string().trim().max(80).optional(),
+        school: z.string().trim().max(120).optional(),
+        subject: z.string().trim().max(80).optional(),
+        groupId: z.string().uuid().optional().nullable(),
+        notes: z.string().trim().max(500).optional(),
+        approve: z.boolean().optional(),
+      })
+      .parse(input),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { newStudentCode } = await import("./negm.server");
+    const approve = data.approve !== false;
+    let code: string | null = null;
+    if (approve) {
+      for (let i = 0; i < 6; i++) {
+        const candidate = newStudentCode();
+        const { data: exists } = await supabaseAdmin
+          .from("students")
+          .select("id")
+          .eq("student_code", candidate)
+          .maybeSingle();
+        if (!exists) {
+          code = candidate;
+          break;
+        }
+      }
+    }
+    const { error } = await supabaseAdmin.from("students").insert({
+      teacher_id: context.userId,
+      full_name: data.fullName,
+      phone: data.phone ?? null,
+      guardian_phone: data.guardianPhone ?? null,
+      gender: data.gender ?? null,
+      grade: data.grade ?? null,
+      section: data.section ?? null,
+      school: data.school ?? null,
+      subject: data.subject ?? null,
+      group_id: data.groupId || null,
+      notes: data.notes ?? null,
+      student_code: code,
+      status: approve ? "approved" : "pending",
+    });
+    if (error) throw new Error(error.message);
+    return { code };
+  });
+
+export const getPublicTeacher = createServerFn({ method: "GET" })
+  .inputValidator((input: unknown) => z.object({ teacherId: z.string().uuid() }).parse(input))
+  .handler(async ({ data }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const { data: teacher } = await supabaseAdmin
+      .from("teachers")
+      .select("id, center_name, full_name, is_suspended")
+      .eq("id", data.teacherId)
+      .maybeSingle();
+    if (!teacher || teacher.is_suspended) return null;
+    return { id: teacher.id, center_name: teacher.center_name, full_name: teacher.full_name };
+  });
+
+export const createManualExam = createServerFn({ method: "POST" })
+  .middleware([requireSupabaseAuth])
+  .inputValidator((input: unknown) =>
+    z
+      .object({
+        title: z.string().trim().min(2).max(160),
+        subject: z.string().trim().max(80).optional(),
+        grade: z.string().trim().max(80).optional(),
+        groupId: z.string().uuid().optional().nullable(),
+        duration: z.number().int().min(1).max(600),
+        questions: z
+          .array(
+            z.object({
+              type: z.string().trim().min(2).max(20),
+              question: z.string().trim().min(1).max(2000),
+              options: z.array(z.string().max(400)).max(8).optional(),
+              correctAnswer: z.string().trim().max(500).optional(),
+              score: z.number().min(0).max(100),
+            }),
+          )
+          .min(1)
+          .max(60),
+      })
+      .parse(input),
+  )
+  .handler(async ({ data, context }) => {
+    const { supabaseAdmin } = await import("@/integrations/supabase/client.server");
+    const totalScore = data.questions.reduce((s, q) => s + (Number(q.score) || 0), 0);
+    const { data: exam, error } = await supabaseAdmin
+      .from("exams")
+      .insert({
+        teacher_id: context.userId,
+        group_id: data.groupId || null,
+        title: data.title,
+        subject: data.subject ?? null,
+        grade: data.grade ?? null,
+        duration_minutes: data.duration,
+        total_score: totalScore,
+        status: "draft",
+        source: "manual",
+      })
+      .select("id")
+      .single();
+    if (error) throw new Error(error.message);
+    const { error: qError } = await supabaseAdmin.from("exam_questions").insert(
+      data.questions.map((q, i) => ({
+        teacher_id: context.userId,
+        exam_id: exam.id,
+        type: q.type,
+        question: q.question,
+        options: (q.options ?? []).filter(Boolean),
+        correct_answer: q.correctAnswer ?? null,
+        score: q.score,
+        order_index: i,
+      })),
+    );
+    if (qError) throw new Error(qError.message);
+    return { id: exam.id };
+  });
