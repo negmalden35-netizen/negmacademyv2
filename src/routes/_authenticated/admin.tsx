@@ -82,6 +82,7 @@ function AdminPage() {
   const createFn = useServerFn(adminCreateLicense);
   const statusFn = useServerFn(adminSetLicenseStatus);
   const suspendFn = useServerFn(adminSetTeacherSuspended);
+  const clearEmailFn = useServerFn(adminClearTeacherEmail);
 
   const [teacherSearch, setTeacherSearch] = useState("");
   const [licenseSearch, setLicenseSearch] = useState("");
