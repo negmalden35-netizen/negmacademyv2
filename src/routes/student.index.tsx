@@ -72,10 +72,7 @@ function StudentLogin() {
             </Button>
           </form>
           <p className="text-center text-xs text-muted-foreground">
-            لست مسجلًا بعد؟{" "}
-            <Link to="/student/register" className="font-semibold text-foreground underline">
-              تسجيل طالب جديد
-            </Link>
+            التسجيل الجديد يتم عبر رابط الدعوة الخاص بسنترك أو معلمك فقط.
           </p>
         </CardContent>
       </Card>
