@@ -4,6 +4,8 @@ import {
   LayoutDashboard,
   Users,
   Boxes,
+  Library,
+
   CalendarCheck,
   Wallet,
   FileQuestion,
@@ -36,6 +38,8 @@ const NAV = [
   { to: "/dashboard", label: "الرئيسية", icon: LayoutDashboard },
   { to: "/students", label: "الطلاب", icon: Users },
   { to: "/groups", label: "المجموعات", icon: Boxes },
+  { to: "/subjects", label: "المواد", icon: Library },
+
   { to: "/attendance", label: "الحضور والغياب", icon: CalendarCheck },
   { to: "/payments", label: "المدفوعات", icon: Wallet },
   { to: "/exams", label: "الاختبارات", icon: FileQuestion },
