@@ -3,7 +3,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useServerFn } from "@tanstack/react-start";
 import { toast } from "sonner";
-import { Sparkles, Loader2, Trash2, Send, EyeOff } from "lucide-react";
+import { Sparkles, Loader2, Trash2, Send, EyeOff, PencilLine, Plus } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { TeacherShell } from "@/components/negm/TeacherShell";
 import { Button } from "@/components/ui/button";
