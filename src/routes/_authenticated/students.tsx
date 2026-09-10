@@ -62,8 +62,35 @@ function StudentsPage() {
   const queryClient = useQueryClient();
   const [search, setSearch] = useState("");
   const [tab, setTab] = useState("all");
+  const [addOpen, setAddOpen] = useState(false);
+  const emptyForm = {
+    fullName: "",
+    phone: "",
+    guardianPhone: "",
+    gender: "",
+    grade: "",
+    section: "",
+    school: "",
+    subject: "",
+    groupId: "",
+    notes: "",
+  };
+  const [form, setForm] = useState(emptyForm);
   const approve = useServerFn(approveStudent);
   const regenerate = useServerFn(regenerateStudentCode);
+  const createStudent = useServerFn(teacherCreateStudent);
+  const access = useAccess();
+  const teacherId = access.data?.teacher?.id ?? "";
+
+  const groups = useQuery({
+    queryKey: ["groups-simple"],
+    queryFn: async () => {
+      const { data, error } = await supabase.from("groups").select("id, name").order("name");
+      if (error) throw error;
+      return data;
+    },
+  });
+
 
   const students = useQuery({
     queryKey: ["students"],
