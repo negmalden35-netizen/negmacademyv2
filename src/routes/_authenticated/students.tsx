@@ -179,7 +179,11 @@ function StudentsPage() {
   });
 
   async function copyRegisterLink() {
-    if (!teacherId) return toast.error("تعذر إنشاء الرابط");
+    if (!teacherId) {
+      toast.error("تعذر إنشاء الرابط");
+      return;
+    }
+
     const url = `${window.location.origin}/student/register?t=${teacherId}`;
     try {
       await navigator.clipboard.writeText(url);
