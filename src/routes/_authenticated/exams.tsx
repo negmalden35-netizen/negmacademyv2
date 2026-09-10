@@ -24,7 +24,9 @@ import {
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { EmptyState, TableSkeleton } from "@/components/negm/states";
 import { GRADES, QUESTION_TYPES, formatDate } from "@/lib/negm";
-import { generateAiExam } from "@/lib/negm.functions";
+import { generateAiExam, createManualExam } from "@/lib/negm.functions";
+import { Textarea } from "@/components/ui/textarea";
+
 
 export const Route = createFileRoute("/_authenticated/exams")({
   head: () => ({
