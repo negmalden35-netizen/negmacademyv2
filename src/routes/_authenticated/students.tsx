@@ -289,9 +289,13 @@ function StudentsPage() {
               <DialogFooter>
                 <Button
                   onClick={() => {
-                    if (form.fullName.trim().length < 3) return toast.error("أدخل اسم الطالب");
+                    if (form.fullName.trim().length < 3) {
+                      toast.error("أدخل اسم الطالب");
+                      return;
+                    }
                     createMutation.mutate();
                   }}
+
                   disabled={createMutation.isPending}
                 >
                   حفظ الطالب
