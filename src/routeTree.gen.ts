@@ -31,6 +31,7 @@ import { Route as AuthenticatedQuestionsRouteImport } from './routes/_authentica
 import { Route as AuthenticatedReportsRouteImport } from './routes/_authenticated/reports'
 import { Route as AuthenticatedSettingsRouteImport } from './routes/_authenticated/settings'
 import { Route as AuthenticatedStudentsRouteImport } from './routes/_authenticated/students'
+import { Route as AuthenticatedSubjectsRouteImport } from './routes/_authenticated/subjects'
 import { Route as StudentIndexRouteImport } from './routes/student.index'
 import { Route as StudentDashboardRouteImport } from './routes/student.dashboard'
 import { Route as StudentRegisterRouteImport } from './routes/student.register'
@@ -148,6 +149,11 @@ const AuthenticatedStudentsRoute = AuthenticatedStudentsRouteImport.update({
   path: '/students',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedSubjectsRoute = AuthenticatedSubjectsRouteImport.update({
+  id: '/subjects',
+  path: '/subjects',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const StudentIndexRoute = StudentIndexRouteImport.update({
   id: '/student/',
   path: '/student/',
@@ -196,6 +202,7 @@ export interface FileRoutesByFullPath {
   '/reports': typeof AuthenticatedReportsRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/students': typeof AuthenticatedStudentsRouteWithChildren
+  '/subjects': typeof AuthenticatedSubjectsRoute
   '/student/dashboard': typeof StudentDashboardRoute
   '/student/register': typeof StudentRegisterRoute
   '/student/': typeof StudentIndexRoute
@@ -224,6 +231,7 @@ export interface FileRoutesByTo {
   '/reports': typeof AuthenticatedReportsRoute
   '/settings': typeof AuthenticatedSettingsRoute
   '/students': typeof AuthenticatedStudentsRouteWithChildren
+  '/subjects': typeof AuthenticatedSubjectsRoute
   '/student/dashboard': typeof StudentDashboardRoute
   '/student/register': typeof StudentRegisterRoute
   '/student': typeof StudentIndexRoute
@@ -254,6 +262,7 @@ export interface FileRoutesById {
   '/_authenticated/reports': typeof AuthenticatedReportsRoute
   '/_authenticated/settings': typeof AuthenticatedSettingsRoute
   '/_authenticated/students': typeof AuthenticatedStudentsRouteWithChildren
+  '/_authenticated/subjects': typeof AuthenticatedSubjectsRoute
   '/student/dashboard': typeof StudentDashboardRoute
   '/student/register': typeof StudentRegisterRoute
   '/student/': typeof StudentIndexRoute
@@ -284,6 +293,7 @@ export interface FileRouteTypes {
     | '/reports'
     | '/settings'
     | '/students'
+    | '/subjects'
     | '/student/dashboard'
     | '/student/register'
     | '/student/'
@@ -312,6 +322,7 @@ export interface FileRouteTypes {
     | '/reports'
     | '/settings'
     | '/students'
+    | '/subjects'
     | '/student/dashboard'
     | '/student/register'
     | '/student'
@@ -341,6 +352,7 @@ export interface FileRouteTypes {
     | '/_authenticated/reports'
     | '/_authenticated/settings'
     | '/_authenticated/students'
+    | '/_authenticated/subjects'
     | '/student/dashboard'
     | '/student/register'
     | '/student/'
@@ -518,6 +530,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedStudentsRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/subjects': {
+      id: '/_authenticated/subjects'
+      path: '/subjects'
+      fullPath: '/subjects'
+      preLoaderRoute: typeof AuthenticatedSubjectsRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/student/': {
       id: '/student/'
       path: '/student'
@@ -585,6 +604,7 @@ interface AuthenticatedRouteRouteChildren {
   AuthenticatedReportsRoute: typeof AuthenticatedReportsRoute
   AuthenticatedSettingsRoute: typeof AuthenticatedSettingsRoute
   AuthenticatedStudentsRoute: typeof AuthenticatedStudentsRouteWithChildren
+  AuthenticatedSubjectsRoute: typeof AuthenticatedSubjectsRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
@@ -603,6 +623,7 @@ const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedReportsRoute: AuthenticatedReportsRoute,
   AuthenticatedSettingsRoute: AuthenticatedSettingsRoute,
   AuthenticatedStudentsRoute: AuthenticatedStudentsRouteWithChildren,
+  AuthenticatedSubjectsRoute: AuthenticatedSubjectsRoute,
 }
 
 const AuthenticatedRouteRouteWithChildren =
