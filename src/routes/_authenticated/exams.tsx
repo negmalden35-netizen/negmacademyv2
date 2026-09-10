@@ -38,9 +38,34 @@ export const Route = createFileRoute("/_authenticated/exams")({
   component: ExamsPage,
 });
 
+type ManualQuestion = {
+  type: string;
+  question: string;
+  options: string[];
+  correctAnswer: string;
+  score: string;
+};
+
+const emptyQuestion: ManualQuestion = {
+  type: "mcq",
+  question: "",
+  options: ["", "", "", ""],
+  correctAnswer: "",
+  score: "1",
+};
+
 function ExamsPage() {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
+  const [manualOpen, setManualOpen] = useState(false);
+  const [manual, setManual] = useState({
+    title: "",
+    subject: "",
+    grade: "",
+    groupId: "",
+    duration: "30",
+    questions: [{ ...emptyQuestion }] as ManualQuestion[],
+  });
   const [form, setForm] = useState({
     title: "",
     subject: "",
@@ -53,6 +78,8 @@ function ExamsPage() {
     types: ["mcq"] as string[],
   });
   const generate = useServerFn(generateAiExam);
+  const createManual = useServerFn(createManualExam);
+
 
   const groups = useQuery({
     queryKey: ["groups-simple"],
