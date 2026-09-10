@@ -496,7 +496,9 @@ function ExamsPage() {
             </DialogFooter>
           </DialogContent>
         </Dialog>
+        </>
       }
+
     >
       {exams.isLoading ? (
         <TableSkeleton />
