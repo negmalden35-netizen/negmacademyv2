@@ -152,6 +152,43 @@ function StudentsPage() {
     onError: () => toast.error("تعذر حذف الطالب"),
   });
 
+  const createMutation = useMutation({
+    mutationFn: () =>
+      createStudent({
+        data: {
+          fullName: form.fullName.trim(),
+          phone: form.phone.trim() || undefined,
+          guardianPhone: form.guardianPhone.trim() || undefined,
+          gender: form.gender || undefined,
+          grade: form.grade || undefined,
+          section: form.section.trim() || undefined,
+          school: form.school.trim() || undefined,
+          subject: form.subject.trim() || undefined,
+          groupId: form.groupId || null,
+          notes: form.notes.trim() || undefined,
+          approve: true,
+        },
+      }),
+    onSuccess: (res) => {
+      toast.success(res.code ? `تمت إضافة الطالب — الكود: ${res.code}` : "تمت إضافة الطالب");
+      setAddOpen(false);
+      setForm(emptyForm);
+      invalidate();
+    },
+    onError: () => toast.error("تعذر إضافة الطالب"),
+  });
+
+  async function copyRegisterLink() {
+    if (!teacherId) return toast.error("تعذر إنشاء الرابط");
+    const url = `${window.location.origin}/student/register?t=${teacherId}`;
+    try {
+      await navigator.clipboard.writeText(url);
+      toast.success("تم نسخ رابط تسجيل الطلاب");
+    } catch {
+      toast.error(url);
+    }
+  }
+
   const rows = useMemo(() => {
     const list = students.data ?? [];
     const q = search.trim();
@@ -167,7 +204,101 @@ function StudentsPage() {
   }, [students.data, search, tab]);
 
   return (
-    <TeacherShell title="الطلاب" description="اعتماد الطلاب وإدارة بياناتهم وأكوادهم">
+    <TeacherShell
+      title="الطلاب"
+      description="اعتماد الطلاب وإدارة بياناتهم وأكوادهم"
+      actions={
+        <>
+          <Button size="sm" variant="outline" onClick={copyRegisterLink}>
+            <Link2 className="size-4" /> رابط التسجيل
+          </Button>
+          <Dialog open={addOpen} onOpenChange={setAddOpen}>
+            <DialogTrigger asChild>
+              <Button size="sm">
+                <UserPlus className="size-4" /> إضافة طالب
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle>إضافة طالب جديد</DialogTitle>
+                <DialogDescription>سيُضاف الطالب لسنترك مباشرة مع كود دخول.</DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="space-y-2 sm:col-span-2">
+                  <Label>الاسم الكامل</Label>
+                  <Input value={form.fullName} onChange={(e) => setForm({ ...form, fullName: e.target.value })} />
+                </div>
+                <div className="space-y-2">
+                  <Label>هاتف الطالب</Label>
+                  <Input value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value })} />
+                </div>
+                <div className="space-y-2">
+                  <Label>هاتف ولي الأمر</Label>
+                  <Input
+                    value={form.guardianPhone}
+                    onChange={(e) => setForm({ ...form, guardianPhone: e.target.value })}
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label>الصف</Label>
+                  <Select value={form.grade} onValueChange={(v) => setForm({ ...form, grade: v })}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="اختر الصف" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {GRADES.map((g) => (
+                        <SelectItem key={g} value={g}>
+                          {g}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>المجموعة</Label>
+                  <Select value={form.groupId} onValueChange={(v) => setForm({ ...form, groupId: v })}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="بدون مجموعة" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {(groups.data ?? []).map((g) => (
+                        <SelectItem key={g.id} value={g.id}>
+                          {g.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-2">
+                  <Label>المادة</Label>
+                  <Input value={form.subject} onChange={(e) => setForm({ ...form, subject: e.target.value })} />
+                </div>
+                <div className="space-y-2">
+                  <Label>المدرسة</Label>
+                  <Input value={form.school} onChange={(e) => setForm({ ...form, school: e.target.value })} />
+                </div>
+                <div className="space-y-2 sm:col-span-2">
+                  <Label>ملاحظات</Label>
+                  <Input value={form.notes} onChange={(e) => setForm({ ...form, notes: e.target.value })} />
+                </div>
+              </div>
+              <DialogFooter>
+                <Button
+                  onClick={() => {
+                    if (form.fullName.trim().length < 3) return toast.error("أدخل اسم الطالب");
+                    createMutation.mutate();
+                  }}
+                  disabled={createMutation.isPending}
+                >
+                  حفظ الطالب
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </>
+      }
+    >
+
       <Card className="shadow-card">
         <CardContent className="space-y-4 p-4 md:p-6">
           <div className="flex flex-wrap items-center justify-between gap-3">
